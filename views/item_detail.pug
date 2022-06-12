@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h2 #{title}
+  h4 #{item.name}
+  div(style='margin-left:10px;margin-top:10px')
+  p #{item.description}
+  p Items in stock: #{item.numberinstock}
+  p Price #{item.price}€
+  hr
+  p
+  a(href=item.url+'/delete') Delete item
+  p
+  a(href=item.url+'/update') Update item

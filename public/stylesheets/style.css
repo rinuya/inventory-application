@@ -21,3 +21,13 @@ a {
 dt{
   margin-top: 20px;
 }
+
+.form-grop{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+button{
+  margin-top: 20px;
+  padding: 12px;
+}
