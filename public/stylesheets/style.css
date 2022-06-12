@@ -6,3 +6,18 @@ body {
 a {
   color: #00B7FF;
 }
+
+.topnav{
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  font-size: 1.45rem;
+  
+}
+.topnav>a{
+  text-decoration: none;
+}
+
+dt{
+  margin-top: 20px;
+}

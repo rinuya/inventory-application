@@ -13,7 +13,8 @@ var CategorySchema = new Schema(
 CategorySchema
 .virtual('url')
 .get(function () {
-  return '/categories/' + this._id;
+  //Routing should be based on category for items!
+  return '/catalog/categories/' + this._id;
 });
 
 //Export model
