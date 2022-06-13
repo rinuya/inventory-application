@@ -14,6 +14,15 @@ router.get('/categories', category_controller.category_list);
 //Render Details of Categories
 router.get('/categories/:id', category_controller.category_detail);
 
+router.get('/categories/:id/delete', category_controller.category_delete_get);
+
+router.post('/categories/:id/delete', category_controller.category_delete_post);
+
+router.get('/categories/:id/update', category_controller.category_update_get);
+
+router.post('/categories/:id/update', category_controller.category_update_post);
+
+
 //render create of category
 router.get("/addcategory", category_controller.category_create_get)
 

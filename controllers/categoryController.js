@@ -39,9 +39,43 @@ exports.category_detail = function(req, res, next) {
   };
 
 exports.category_delete_get = function(req, res, next) {
-
+  async.parallel({
+    category: function (callback){
+      Category.findById(req.params.id).exec(callback)
+    },
+    items: function (callback){
+      Item.find({"category": req.params.id}).exec(callback)
+    },
+  }, function(err, results){
+    if (err) {return next(err);}
+    if(results.category==null){
+      res.redirect("/catalog/categories")
+    }
+    res.render("category_delete", {title: "Delete Category", category: results.category, items: results.items});
+  });
 };
-exports.category_delete_post = []
+exports.category_delete_post = function(req, res, next){
+  async.parallel({
+    category: function(callback){
+      Category.findById(req.body.categoryid).exec(callback)
+    },
+    items: function(callback){
+      Item.find({"category": req.body.categoryid}).exec(callback)
+    },
+  }, function(err, results){
+    if (err) {return next(err);}
+    if (results.items.length > 0) {
+      res.render("category_delete", {title: "Delete Category", category: results.category, items: results.items});
+      return;
+    }
+    else{
+      Category.findByIdAndDelete(req.body.categoryid, function deleteCategory(err){
+        if(err) {return next(err);}
+        res.redirect("/catalog/categories")
+      })
+    }
+  })
+}
 
 exports.category_create_get = function(req, res, next) {
     res.render("category_form", {title: "Create Category"});
@@ -93,6 +127,34 @@ exports.category_create_post = [
 ]
 
 exports.category_update_get = function(req, res, next) {
-    
+  Category.findById(req.params.id).exec(function (err, category){
+    if (err) {return next(err)}
+    res.render("category_form", {title: "Create Category", category: category});
+  })
 };
-exports.category_update_post = []
+exports.category_update_post = [
+  body("name", "Name must not be empty").trim().isLength({min:1}).escape(),
+  body("description", "Description must not be empty").trim().isLength({min:1}).escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    var category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id
+    }
+    );
+    if(!errors.isEmpty()){
+      //There are errors, rerender
+
+      res.render("category_form", {title: "Update Category", category: category, errors: errors.array()});
+    }
+    else{
+      Category.findByIdAndUpdate(req.params.id, category, {}, function(err, thecategory){
+        if(err) {return next(err);}
+        res.redirect(thecategory.url)
+      })
+    }
+  }
+]
